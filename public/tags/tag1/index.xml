@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tag1 on My blog is awesome</title>
+    <link>http://localhost:1313/tags/tag1/</link>
+    <description>Recent content in Tag1 on My blog is awesome</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>All rights reserved - 2015</copyright>
+    <lastBuildDate>Mon, 20 Jul 2015 20:05:40 +0900</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/tag1/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ブログをhugoに移行してみた。</title>
+      <link>http://localhost:1313/post/post-title/</link>
+      <pubDate>Mon, 20 Jul 2015 20:05:40 +0900</pubDate>
+      
+      <guid>http://localhost:1313/post/post-title/</guid>
+      <description>
+
+&lt;h1 id=&#34;hello-my-name-is:23c89e730caf6d7f2c5c4ee11eb465ea&#34;&gt;hello my name is &amp;hellip;&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sample.js&#34;&gt;var helllo = &amp;quot;hello&amp;quot;;
+console.log(hello);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;私の名前は中野です。&lt;br /&gt;
+改行は自動なのかな？  line-heightの感じを調整する。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;config.php&lt;/code&gt;とかの記述はどうなるのか？&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;クリエイト&lt;/li&gt;
+&lt;li&gt;author&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
