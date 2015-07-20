@@ -206,42 +206,44 @@ h4, h5, h6 {
     -moz-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
     -o-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
     color: #2E2E2E;
-    line-height: 1.75em;
+    line-height: 1.15em;
     margin: 0 0 0.4em 0;
     font-family: 'Open Sans','Helvetica Neue', Helvetica, 'Arial', '游ゴシック', YuGothic, 'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
-    font-weight: 100;
     text-rendering: geometricPrecision;
+    font-weight: 100;
 }
 
 h1 {
-    font-size: 5rem;
+    font-size: 4rem;
     letter-spacing: -2px;
     text-indent: -3px;
 }
 
 h2 {
-    font-size: 3.6rem;
+    font-size: 2.7rem;
     letter-spacing: -1px;
+    border-left: 10px solid #777;
+    padding-left: 1.5rem;
 }
 
 h3 {
-    font-size: 3rem;
-}
-
-h4 {
     font-size: 2.5rem;
 }
 
-h5 {
+h4 {
     font-size: 2rem;
+}
+
+h5 {
+    font-size: 1.8rem;
 }
 
 h6 {
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 a {
-    color: #4A4A4A;
+    color: #ff4081;
     transition: color 0.3s ease;
 }
 
@@ -549,7 +551,7 @@ body.nav-opened .nav-cover {
                         opacity 0.3s ease 0.7s;
             transition: transform 0.5s ease,
                         opacity 0.3s ease 0.7s;
-font-family: "Open Sans","Myriad Pro","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+font-family: 'Open Sans','Helvetica Neue', Helvetica, 'Arial', '游ゴシック', YuGothic, 'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
 font-weight: 700;
 font-size: 11px;
 color: #909090;
@@ -863,7 +865,7 @@ body.nav-opened .menu-button .word {
     font-size: 5rem;
     letter-spacing: -1px;
     font-weight: 700;
-    font-family: "Open Sans", sans-serif;
+    /*font-family: "Open Sans", sans-serif;*/
     color: #fff;
 }
 
@@ -872,7 +874,7 @@ body.nav-opened .menu-button .word {
     font-size: 2rem;
     line-height: 1.5em;
     font-weight: 400;
-    font-family: "Merriweather", serif;
+    /*font-family: "Merriweather", serif;*/
     letter-spacing: 0.01rem;
     color: rgba(255,255,255,0.8);
 }
@@ -962,8 +964,8 @@ body:not(.post-template) .post-title {
 
 .post-meta {
     display: block;
-    margin: 1.75rem 0 0 0;
-    font-family: "Open Sans", sans-serif;
+    margin: 1.75rem 0;
+    /*font-family: "Open Sans", sans-serif;*/
     font-size: 1.5rem;
     line-height: 2.2rem;
     color: #9EABB3;
@@ -1287,7 +1289,7 @@ body:not(.post-template) .post-title {
 /* Location, website, and link */
 .author-profile .author-meta {
     margin: 2rem 0;
-    font-family: "Merriweather", serif;
+    /*font-family: "Merriweather", serif;*/
     letter-spacing: 0.01rem;
     font-size: 1.7rem;
 }
@@ -1337,7 +1339,7 @@ body:not(.post-template) .post-title {
     width: 80%;
     max-width: 710px;
     margin: 4rem auto;
-    font-family: "Open Sans", sans-serif;
+    /*font-family: "Open Sans", sans-serif;*/
     font-size: 1.3rem;
     color: #9EABB3;
     text-align: center;

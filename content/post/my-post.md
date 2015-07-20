@@ -17,9 +17,13 @@ hugoのインストールは[ココ](http://qiita.com/syui/items/869538099551f24
 
 スタティックサイトジェネレーターは過去に使ってたけどhugoはGoで出来てるし、速くていい感じ。
 
-### 使用しているテーマ
+## 使用しているテーマ
 
  * https://github.com/vjeantet/hugo-theme-casper
 
 主にfont-familyなどをちょいちょい編集して利用中。
 もうちょっとテーマが増えればいろいろ使い道がありそう。
+
+## テーマのCSSファイル変更
+
+既存のthemeディレクトリにある`static/css`をルートディレクトリにあるstatic/cssにコピーして利用するのが正っぽい。
