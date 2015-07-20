@@ -241,8 +241,7 @@ h6 {
 }
 
 a {
-    /*color: #4A4A4A;*/
-    color: #ff4081;
+    color: #4A4A4A;
     transition: color 0.3s ease;
 }
 
@@ -963,7 +962,7 @@ body:not(.post-template) .post-title {
 
 .post-meta {
     display: block;
-    margin: 1.75rem 0;
+    margin: 1.75rem 0 0 0;
     font-family: "Open Sans", sans-serif;
     font-size: 1.5rem;
     line-height: 2.2rem;
