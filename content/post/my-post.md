@@ -27,3 +27,15 @@ hugoのインストールは[ココ](http://qiita.com/syui/items/869538099551f24
 ## テーマのCSSファイル変更
 
 既存のthemeディレクトリにある`static/css`をルートディレクトリにあるstatic/cssにコピーして利用するのが正っぽい。
+
+## github pagesにデプロイ
+
+http://hori-ryota.com/blog/create-blog-with-hugo-and-circleci/
+
+hori blogさんの記事を参考に設定。
+circle CIやwerckerでもデプロイ試してみた。  
+初めて使ったけど便利だ！  
+社内ではjenkins使ってるけど職人化がすすむ。  
+
+CIツールというよりgithub pagesの仕組みがイマイチ理解しておらずそこに若干苦労。  
+まあ終わってしまえばなんてことはない。
