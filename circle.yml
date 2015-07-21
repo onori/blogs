@@ -8,14 +8,14 @@ checkout:
 dependencies:
   pre:
     - go get -v github.com/spf13/hugo
-    - git config --global user.name "CircleCI"
-    - git config --global user.email "circleci@example.com"
+    - git config --global user.name "onori"
+    - git config --global user.email "onori.black1984@gmail.com"
 
 deployment:
   master:
     branch: master
     commands:
-      - git clone git@github.com:hori-ryota/hori-ryota.github.io.git public
+      - git clone git@github.com:onori/onori.github.io.git public
       - hugo
       - cd public && git add .
       - cd public && git commit -m "[ci skip] publish"
