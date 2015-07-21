@@ -2,12 +2,13 @@ BaseUrl= "http://example.com/"
 LanguageCode= "ja"
 Title= "MAN.BLOG"
 paginate = 5
+theme = "casper"
 DisqusShortname = "onori"
 Copyright = "All rights reserved - 2015"
 canonifyurls = true
 
 [params]
-  description = "マネージャー業務の日々 世に置いていかれない為に、自習の意味も込めて。"
+  description = "マネージャー業務の日々 コード書くことが少なくなってる。最近はLaravelとElixir（言語のほう）に興味津々。"
   cover = "images/footer_lodyas.png"
   author = "onori"
   authorlocation = "Tokyo, Japan"
