@@ -234,10 +234,12 @@ h4 {
 
 h5 {
     font-size: 1.8rem;
+    font-weight: 700;
 }
 
 h6 {
     font-size: 1.8rem;
+    font-weight: 700;
 }
 
 a {
@@ -959,6 +961,8 @@ body:not(.post-template) .post-title {
     margin: 0;
     font-size: 0.9em;
     line-height: 1.7em;
+    height: 50px;
+    overflow: hidden;
 }
 
 .read-more {
