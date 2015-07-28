@@ -6,7 +6,7 @@ draft = false
 image = ""
 menu = ""
 share = true
-slug = "post-title"
+slug = "laravel-schedule-mail-heroku"
 tags = ["laravel", "heroku"]
 title = "laravel5.1でschedule + メール送信 + Heroku"
 
