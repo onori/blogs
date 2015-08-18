@@ -1,6 +1,6 @@
 BaseUrl= "http://onori.github.io/"
 LanguageCode= "ja"
-Title= "MAN.BLOG"
+Title= "MAN.IN.BLOG"
 paginate = 5
 theme = "casper"
 DisqusShortname = "onori"
