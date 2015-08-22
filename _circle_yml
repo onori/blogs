@@ -16,6 +16,8 @@ deployment:
     branch: master
     commands:
       - git clone git@github.com:onori/onori.github.io.git public
+      - pwd
+      - hugo version
       - hugo
       - cd public && git add .
       - cd public && git commit -m "[ci skip] publish"
