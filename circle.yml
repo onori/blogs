@@ -2,8 +2,8 @@ machine:
   timezone: Asia/Tokyo
 
 checkout:
-  post:
-    - git submodule update --init --recursive
+#  post:
+#    - git submodule update --init --recursive
 
 dependencies:
   pre:
