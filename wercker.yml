@@ -11,4 +11,4 @@ deploy:
         token: $GIT_TOKEN
         repo: onori/onori.github.io
         basedir: public
-        domain: onori.github.io
+        domain: github.com
