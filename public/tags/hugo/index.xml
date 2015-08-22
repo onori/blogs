@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo on MAN.IN.BLOG</title>
+    <link>http://onori.github.io/tags/hugo/</link>
+    <description>Recent content in Hugo on MAN.IN.BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>All rights reserved - 2015</copyright>
+    <lastBuildDate>Mon, 20 Jul 2015 20:05:40 +0900</lastBuildDate>
+    <atom:link href="http://onori.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ブログをhugoに移行してみた</title>
+      <link>http://onori.github.io/post/first-hugo/</link>
+      <pubDate>Mon, 20 Jul 2015 20:05:40 +0900</pubDate>
+      
+      <guid>http://onori.github.io/post/first-hugo/</guid>
+      <description>
+
+&lt;p&gt;記事の移行は終わってないけど、ブログをhugoへ移行してみた。&lt;br /&gt;
+hugoのインストールは&lt;a href=&#34;http://qiita.com/syui/items/869538099551f24acbbf&#34;&gt;ココ&lt;/a&gt;の記事なんかを見ながらやるとサクサクと入る。&lt;/p&gt;
+
+&lt;p&gt;スタティックサイトジェネレーターは過去に使ってたけどhugoはGoで出来てるし、速くていい感じ。&lt;/p&gt;
+
+&lt;h2 id=&#34;使用しているテーマ:23c89e730caf6d7f2c5c4ee11eb465ea&#34;&gt;使用しているテーマ&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vjeantet/hugo-theme-casper&#34;&gt;https://github.com/vjeantet/hugo-theme-casper&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;主にfont-familyなどをちょいちょい編集して利用中。
+もうちょっとテーマが増えればいろいろ使い道がありそう。&lt;/p&gt;
+
+&lt;h2 id=&#34;テーマのcssファイル変更:23c89e730caf6d7f2c5c4ee11eb465ea&#34;&gt;テーマのCSSファイル変更&lt;/h2&gt;
+
+&lt;p&gt;既存のthemeディレクトリにある&lt;code&gt;static/css&lt;/code&gt;をルートディレクトリにあるstatic/cssにコピーして利用するのが正っぽい。&lt;/p&gt;
+
+&lt;h2 id=&#34;github-pagesにデプロイ:23c89e730caf6d7f2c5c4ee11eb465ea&#34;&gt;github pagesにデプロイ&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://hori-ryota.com/blog/create-blog-with-hugo-and-circleci/&#34;&gt;http://hori-ryota.com/blog/create-blog-with-hugo-and-circleci/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;hori blogさんの記事を参考に設定。
+circle CIやwerckerでもデプロイ試してみた。&lt;br /&gt;
+初めて使ったけど便利だ！&lt;br /&gt;
+社内ではjenkins使ってるけど職人化がすすむ。&lt;/p&gt;
+
+&lt;p&gt;CIツールというよりgithub pagesの仕組みがイマイチ理解しておらずそこに若干苦労。&lt;br /&gt;
+まあ終わってしまえばなんてことはない。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
