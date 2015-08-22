@@ -9,5 +9,5 @@ deploy:
   steps:
     - lukevivier/gh-pages@0.2.1:
         token: $GIT_TOKEN
-        domain: onori.github.io
+        repo: onori/onori.github.io
         basedir: public
