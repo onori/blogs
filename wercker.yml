@@ -1,13 +1,13 @@
-box: wercker/default
+box: debian
 build:
   steps:
     - arjen/hugo-build:
+        version: 0.14
         theme: casper
         flags: --buildDrafts=false
 deploy:
   steps:
-    - uetchy/gh-pages:
+    - lukevivier/gh-pages@0.2.1:
         token: $GIT_TOKEN
         repo: onori/onori.github.io
         basedir: public
-        domain: github.com
