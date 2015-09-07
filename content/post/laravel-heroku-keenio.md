@@ -19,3 +19,4 @@ title = "laravel+Keen.io+herokuで簡易解析"
 
 keen.ioはかしこいんだよねー。keen.ioはかしこいんだよねー。
 keen.ioはかしこいんだよねー。keen.ioはかしこいんだよねー。
+keen.ioはかしこいんだよねー。keen.ioはかしこいんだよねー。
