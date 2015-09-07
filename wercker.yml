@@ -1,13 +1,12 @@
 box: wercker/default
 build:
   steps:
-    - arjen/hugo-build@1.4.0:
-        version: 0.14
+    - arjen/hugo-build:
         theme: casper
         flags: --buildDrafts=false
 deploy:
   steps:
-    - lukevivier/gh-pages@0.2.1:
+    - uetchy/gh-pages:
         token: $GIT_TOKEN
         repo: onori/onori.github.io
         basedir: public
