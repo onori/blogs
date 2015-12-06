@@ -59,7 +59,9 @@ Herokuの管理画面から、Setting > Config Variables > Edit
 
 上記の環境設定は、.envファイルに同じように記述する。
 
-```.env
+`.env`
+
+```
 KEEN_API_URL=####
 KEEN_MASTER_KEY=####
 .
@@ -85,7 +87,7 @@ $ composer update
 
 config/app.php を開き、
 
-```config/app.php
+```
 'providers' => array(
     ...
     Wensleydale\KeenLaravel\KeenLaravelServiceProvider::class
@@ -110,7 +112,9 @@ $ php artisan vendor:publish
 
 keen.phpには先ほど.envファイルに記述した設定値を記述。
 
-```keen.php
+`keen.php`
+
+```
 <?php
 
 return array(
@@ -133,7 +137,9 @@ return array(
 さて、ここまで準備が出来たら、いよいよKeen.ioに値をぶん投げる時が来る。  
 今回の要件はアクセス解析、というより「誰がいつログインしたか？」の情報だけで良かったので、ログイン部分にこのKeenの処理を挟む。
 
-```app/Controller/AuthController.php
+`app/Controller/AuthController.php`
+
+```
 <?php
 namespace App\Http\Controllers\Auth;
 
