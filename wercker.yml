@@ -7,16 +7,9 @@ build:
         flags: --buildDrafts=false
 deploy:
   steps:
+    - install-packages:
+        packages: git ssh-client
     - lukevivier/gh-pages@0.2.1:
         token: $GIT_TOKEN
         domain: onori.github.io
         basedir: public
-    # - script:
-    #     name: install git
-    #     code: |
-    #       apt-get update
-    #       apt-get -y install git
-    # - lukevivier/gh-pages@0.2.1:
-    #     token: $GIT_TOKEN
-    #     repo: onori/onori.github.io
-    #     basedir: public
