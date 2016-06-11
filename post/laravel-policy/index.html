@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  	<meta property="og:title" content=" laravel policyのハマりどころ &middot;  MAN.IN.BLOG" />
+  	<meta property="og:site_name" content="MAN.IN.BLOG" />
+  	<meta property="og:url" content="http://onori.github.io/post/laravel-policy/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2015-10-22T16:00:18&#43;09:00" />
+
+    
+    <meta property="og:article:tag" content="laravel" />
+    
+    <meta property="og:article:tag" content="5.1.11" />
+    
+    
+
+  <title>
+     laravel policyのハマりどころ &middot;  MAN.IN.BLOG
+  </title>
+
+    <meta name="description" content="マネージャー業務の日々 コード書くことが少なくなってる。最近はLaravelとElixir（言語のほう）に興味津々。" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://onori.github.io/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://onori.github.io/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://onori.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://onori.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css" />
+
+    
+      
+          <link href="http://onori.github.io/index.xml" rel="alternate" type="application/rss+xml" title="MAN.IN.BLOG" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://onori.github.io/post/laravel-policy/" />
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-71080121-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+    </ul>
+    
+    
+    <a class="subscribe-button icon-feed" href="http://onori.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+      <a class="blog-logo" href="http://onori.github.io/"><img src="http://onori.github.io/images/logo.png" alt="Home" /></a>
+  
+  
+      <a class="menu-button icon-feed" href="http://onori.github.io/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">laravel policyのハマりどころ</h1>
+        <small></small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2015-10-22T16:00:18&#43;09:00">
+            Oct 22, 2015
+          </time>
+        
+         
+          <span class="post-tag small"><a href="http://onori.github.io/tags/laravel/">#laravel</a></span>
+         
+          <span class="post-tag small"><a href="http://onori.github.io/tags/5.1.11/">#5.1.11</a></span>
+         
+        </section>
+    </header>
+  
+    <section class="post-content">
+      
+
+<h2 id="authorization">authorization</h2>
+
+<p>Laravel5.11からauthorization（認可）が追加されたよ！</p>
+
+<ul>
+<li><a href="http://laravel.com/docs/5.1/authorization">http://laravel.com/docs/5.1/authorization</a></li>
+<li><a href="http://readouble.com/laravel/5/1/ja/authorization.html">http://readouble.com/laravel/5/1/ja/authorization.html</a></li>
+</ul>
+
+<p>使い方は簡単なので上で見てね！！！<br />
+使い方の説明じゃないよ！！クソなハマりポイントの解説だよ！！！</p>
+
+<p>これでLaravelでもデフォルトでACLが出来るよ！<br />
+やったねタエちゃん！！</p>
+
+<h2 id="controllerとpolicyとのひも付け">ControllerとPolicyとのひも付け</h2>
+
+<p>AuthServiceProviderにモデルとポリシーファイルとを紐付けるよ！</p>
+
+<ul>
+<li>AuthServiceProvider.php
+<code>
+protected $policies = [
+'App\Measure' =&gt; 'App\Policies\MeasurePolicy',
+]
+</code></li>
+</ul>
+
+<p>ポリシーファイルはartisanコマンドから生成できるよ！</p>
+
+<pre><code>$ php artisan make:policy MeasurePolicy
+</code></pre>
+
+<p>ポリシーファイルに制限規則を記述するよ！<br />
+<code>true</code> が返れば処理は正常に続行されるよ！</p>
+
+<ul>
+<li>MeasurePolicy.php
+<code>
+public function show(User $user, Customer $customer)
+{
+return $user-&gt;bureau_id === $customer-&gt;measure-&gt;bureau-&gt;id;
+}
+</code></li>
+</ul>
+
+<p>コントローラーとポリシーのメソッド名は自動で紐づくんだって！<br />
+かしこいね！！</p>
+
+<blockquote>
+<p>ポリシーのメソッドはコントローラーのメソッドと頻繁に対応します。たとえば前記のupdateメソッドのように、updateと言う名前がコントローラーメソッドとポリシーメソッドで共通です。そのため、Laravelはauthorizeメソッドの引数にインスタンスだけを渡すことも許しています。認可するアビリティは呼び出しているメソッドの名前を元に自動的に決められます。この例では、コントローラーのupdateメソッドからauthorizeが呼びだされていますから、PostPolicy上でもupdateメソッドが呼びだされます。</p>
+</blockquote>
+
+<p>MeasureController</p>
+
+<pre><code>public function create($id)
+{
+    $customer = Customer::find(1);
+    $this-&gt;authorize($customer);
+}
+</code></pre>
+
+<p>その結果&hellip;<br />
+↓  ↓  ↓  ↓</p>
+
+<p>＿人人人人人人＿<br />
+＞　突然の死　＜<br />
+￣Y^Y^Y^Y^Y￣</p>
+
+<h3 id="なぜなのか">なぜなのか？</h3>
+
+<p>ポリシーファイルが暗黙的にコントローラメソッドと連携する場合、<br />
+<strong>第二引数のインスタンスに紐づくポリシー</strong> が適用されるよ！<br />
+つまり上の例だと、<code>CustomerPolicy</code> の<code>create</code>メソッドが呼ばれてることになるよ！</p>
+
+<p><code>ほんと死ねばいいのにね！！！！！！！！！！</code></p>
+
+<h3 id="回避方法">回避方法</h3>
+
+<p>第二引数のインスタンスから取得するので、第二引数に（たとえPolicy内で使わないとしても）その <strong>コントローラーに紐付いてるモデルインスタンス</strong> を投げるよ！！！</p>
+
+<ul>
+<li>MeasureController.php
+<code>
+public function create($id)
+{
+$customer = Customer::find(1);
+$this-&gt;authorize([new Exchange(), $customer]);
+}
+</code></li>
+</ul>
+
+<p>ポリシー側も変更するよ！</p>
+
+<ul>
+<li>MeasurePolicy.php
+<code>
+public function show(User $user, Measure $measure, Customer $customer)
+{
+return $user-&gt;bureau_id === $customer-&gt;measure-&gt;bureau-&gt;id;
+}
+</code></li>
+</ul>
+
+<p><code>(*^◯^*) これで動くんだ！</code></p>
+
+<p>ちなみにコントローラー側から authorize関数の引数に2つ以上のインスタンスを渡す時は、<strong>配列</strong> にして渡すんだ！わかりづらいんだ！！死ねばいいのに！！</p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+    <figure class="author-image">
+        <a class="img" href="http://onori.github.io/" style="background-image: url(http://onori.github.io/images/logo.png)"><span class="hidden">onori's Picture</span></a>
+    </figure>
+    
+
+    
+
+
+
+
+
+<section class="author">
+  <h4><a href="http://onori.github.io/">onori</a></h4>
+  
+  <p>Profile</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Tokyo, Japan</span>
+    
+  </div>
+</section>
+
+
+
+    
+    <section class="share">
+      <h4>Share this post</h4>
+      <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=laravel%20policy%e3%81%ae%e3%83%8f%e3%83%9e%e3%82%8a%e3%81%a9%e3%81%93%e3%82%8d&amp;url=http%3a%2f%2fonori.github.io%2fpost%2flaravel-policy%2f"
+          onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <span class="hidden">Twitter</span>
+      </a>
+      <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fonori.github.io%2fpost%2flaravel-policy%2f"
+          onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <span class="hidden">Facebook</span>
+      </a>
+      <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=http%3a%2f%2fonori.github.io%2fpost%2flaravel-policy%2f"
+         onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <span class="hidden">Google+</span>
+      </a>
+    </section>
+    
+
+    
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'onori';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    
+
+  </footer>
+</article>
+
+</main>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">MAN.IN.BLOG</a> All rights reserved - 2015</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://onori.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="http://onori.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://onori.github.io/js/index.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
+

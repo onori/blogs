@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  	<meta property="og:title" content=" laravel&#43;Keen.io&#43;herokuで簡易解析 &middot;  MAN.IN.BLOG" />
+  	<meta property="og:site_name" content="MAN.IN.BLOG" />
+  	<meta property="og:url" content="http://onori.github.io/post/laravel-keenio-heroku/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2015-08-18T22:09:24&#43;09:00" />
+
+    
+    <meta property="og:article:tag" content="laravel" />
+    
+    <meta property="og:article:tag" content="Keen.io" />
+    
+    <meta property="og:article:tag" content="heroku" />
+    
+    
+
+  <title>
+     laravel&#43;Keen.io&#43;herokuで簡易解析 &middot;  MAN.IN.BLOG
+  </title>
+
+    <meta name="description" content="マネージャー業務の日々 コード書くことが少なくなってる。最近はLaravelとElixir（言語のほう）に興味津々。" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://onori.github.io/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://onori.github.io/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://onori.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://onori.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css" />
+
+    
+      
+          <link href="http://onori.github.io/index.xml" rel="alternate" type="application/rss+xml" title="MAN.IN.BLOG" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://onori.github.io/post/laravel-keenio-heroku/" />
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-71080121-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+    </ul>
+    
+    
+    <a class="subscribe-button icon-feed" href="http://onori.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+      <a class="blog-logo" href="http://onori.github.io/"><img src="http://onori.github.io/images/logo.png" alt="Home" /></a>
+  
+  
+      <a class="menu-button icon-feed" href="http://onori.github.io/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">laravel&#43;Keen.io&#43;herokuで簡易解析</h1>
+        <small></small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2015-08-18T22:09:24&#43;09:00">
+            Aug 18, 2015
+          </time>
+        
+         
+          <span class="post-tag small"><a href="http://onori.github.io/tags/laravel/">#laravel</a></span>
+         
+          <span class="post-tag small"><a href="http://onori.github.io/tags/keen.io/">#Keen.io</a></span>
+         
+          <span class="post-tag small"><a href="http://onori.github.io/tags/heroku/">#heroku</a></span>
+         
+        </section>
+    </header>
+  
+    <section class="post-content">
+      
+
+<p>とあるシステムで簡単なアクセス解析をする必要があったため、<br />
+せっかくなので存在だけは知っていたKeen.ioを使ってみた。</p>
+
+<h2 id="keen-io">Keen.io</h2>
+
+<p><img src="http://onori.github.io/images/keen_io_top.png" alt="keen_io_top.png" /></p>
+
+<p><a href="https://keen.io/">Keen.io</a> は簡単にいうと解析サービス。<br />
+Googleアナリティクスとかmixpanelとかに近いっちゃー近いけど、<br />
+Keen.ioは基本的に <strong>自分で</strong> 解析したい情報をJSONで投げる。</p>
+
+<p>上述アクセスログに関しては、herokuのpostgreSQLなんかにぶっこんでるともったいない。
+そんな時はログ基盤としてKeen.ioを使いましょ、って話。<br />
+とりあえずJSONでぶん投げておけば、「後で◯◯のデータを解析したい！」なんていう時にも役に立つ。<br />
+グラフの出力もしてくれるし。</p>
+
+<p>そんなわけでHeroku + LaravelでのKeen.ioの使い方。</p>
+
+<h2 id="heroku">Heroku</h2>
+
+<p>HerokuのアドオンからKeen.ioをインストール。</p>
+
+<p><img src="http://onori.github.io/images/keen_io_heroku.png" alt="keen_io_heroku.png" /></p>
+
+<p>Developerプランは月50,000回のイベント送信まで無料。<br />
+ホント助かりまっせ！送信回数が増えたらぜひ有料プランを！</p>
+
+<p>コンソールからインストール</p>
+
+<pre><code>$ heroku addons:create keen:developer
+</code></pre>
+
+<p>Herokuの管理画面から、Setting &gt; Config Variables &gt; Edit</p>
+
+<p><img src="http://onori.github.io/images/keen_heroku_env.png" alt="keen_heroku_env.png" /></p>
+
+<p>のような感じで環境設定値が入る。</p>
+
+<h2 id="laravel">Laravel</h2>
+
+<h3 id="envファイルの編集">.envファイルの編集</h3>
+
+<p>上記の環境設定は、.envファイルに同じように記述する。</p>
+
+<p><code>.env</code></p>
+
+<pre><code>KEEN_API_URL=####
+KEEN_MASTER_KEY=####
+.
+.
+.
+</code></pre>
+
+<h3 id="composerパッケージに追加">composerパッケージに追加</h3>
+
+<p>ありがたいことにLaravelからKeen.ioを利用が可能なcomposerパッケージを作ってくれている人がいる。<br />
+せっかくなので利用させていただきましょう。</p>
+
+<ul>
+<li><a href="https://github.com/garethtdavies/keen-io-laravel">https://github.com/garethtdavies/keen-io-laravel</a></li>
+</ul>
+
+<pre><code>$ composer require wensleydale/keen-io-laravel:1.*
+$ composer update
+</code></pre>
+
+<p>更新が終了したら、パッケージ追加完了。</p>
+
+<h3 id="サービスプロバイダーとエイリアスの追加">サービスプロバイダーとエイリアスの追加</h3>
+
+<p>config/app.php を開き、</p>
+
+<pre><code>'providers' =&gt; array(
+    ...
+    Wensleydale\KeenLaravel\KeenLaravelServiceProvider::class
+)
+
+'aliases' =&gt; array(
+    ...
+    'Keen'      =&gt; Wensleydale\KeenLaravel\KeenFacade::class,
+)
+</code></pre>
+
+<p>を追加したのち</p>
+
+<pre><code>$ php artisan vendor:publish
+</code></pre>
+
+<p>を実行すると、同じくconfigディレクトリ内にkeen.phpというファイルがジェネレイトされる。</p>
+
+<h3 id="keen-php">keen.php</h3>
+
+<p>keen.phpには先ほど.envファイルに記述した設定値を記述。</p>
+
+<p><code>keen.php</code></p>
+
+<pre><code>&lt;?php
+
+return array(
+...
+    'projectId' =&gt; env('KEEN_PROJECT_ID'),
+
+...
+    'masterKey' =&gt; env('KEEN_MASTER_KEY'),
+    'writeKey' =&gt; env('KEEN_WRITE_KEY'),
+    'readKey' =&gt; env('KEEN_READ_KEY'),
+
+);
+</code></pre>
+
+<p>このようにenv関数から設定値を読み込む。</p>
+
+<h3 id="keen-ioに値を投げる">Keen.ioに値を投げる</h3>
+
+<p>さて、ここまで準備が出来たら、いよいよKeen.ioに値をぶん投げる時が来る。<br />
+今回の要件はアクセス解析、というより「誰がいつログインしたか？」の情報だけで良かったので、ログイン部分にこのKeenの処理を挟む。</p>
+
+<p><code>app/Controller/AuthController.php</code></p>
+
+<pre><code>&lt;?php
+namespace App\Http\Controllers\Auth;
+
+use Auth;
+use Keen;
+use App\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\Redirect;
+
+class AuthController extends Controller
+{
+    public function postLogin (Request $request)
+    {
+        if (Auth::attempt(['email' =&gt; $request-&gt;email, 'password' =&gt; $request-&gt;password])) {
+
+            // KEEN.IOにイベントを送信
+            $user = Auth::user();
+            $event = ['login' =&gt; ['name' =&gt; $user-&gt;name]];
+            Keen::addEvent('login', $event);
+
+            return redirect()-&gt;intended('dashboard');
+        } else {
+            return redirect()-&gt;intended('/');
+        }
+    }
+}
+</code></pre>
+
+<p><code>$event = ['login' =&gt; ['name' =&gt; $user-&gt;name]]</code> 部分でKeen.ioへ送信するデータを作成し、
+<code>Keen::addEvent()</code>で送信、これだけ。とても簡単。投げられた値は、herokuからSSOでKeen.ioにアクセスし、</p>
+
+<p><img src="http://onori.github.io/images/Keenio_json.png" alt="Keenio_json.png" /></p>
+
+<p>で確認できる。Keenはデータを取得した際のtimestampもよしなにつけてくれるためありがたい。</p>
+
+<h3 id="keen-ioからデータを取得">Keen.ioからデータを取得</h3>
+
+<p>Keen.ioは様々な解析が可能だが、全部紹介していたらとっても長くなりそうなので割愛。<br />
+詳しくは <a href="https://keen.io/docs/">https://keen.io/docs/</a> を確認しながら、いろいろ弄ってみてください。</p>
+
+<p>本アプリケーションでは1日間でのログイン集計が欲しかったので、こんな取得イベントを走らせてました。</p>
+
+<pre><code>// ログイン履歴を取得
+$event = Keen::count('login',
+['target_property' =&gt; 'purchase.item',
+    'group_by' =&gt; 'login.name',
+    'interval' =&gt; 'daily',
+    'timezone' =&gt; 'UTC',
+    'timeframe' =&gt; 'this_1_days'
+]);
+</code></pre>
+
+<p>これを1日1回、heroku schedulerで走らせて、その日のログインを確認するフロー。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>今回のようにちょっとしたことから、自分自身で心ゆくまで解析したいときまで、Keen.ioの汎用性はとても高い。<br />
+反面、googleアナリティクスのように、 <strong>JS一行埋め込んで、はい終わり</strong> という代物ではないため、
+利用できるのは開発者に限るのかも。</p>
+
+<p>ただ、様々な要求が飛び交う中で、こういうことがパッとできるのはやっぱりHerokuの良いところだし、
+豊富なアドオンのおかげでもある、と感じる次第です。</p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+    <figure class="author-image">
+        <a class="img" href="http://onori.github.io/" style="background-image: url(http://onori.github.io/images/logo.png)"><span class="hidden">onori's Picture</span></a>
+    </figure>
+    
+
+    
+
+
+
+
+
+<section class="author">
+  <h4><a href="http://onori.github.io/">onori</a></h4>
+  
+  <p>Profile</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Tokyo, Japan</span>
+    
+  </div>
+</section>
+
+
+
+    
+    <section class="share">
+      <h4>Share this post</h4>
+      <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=laravel%2bKeen.io%2bheroku%e3%81%a7%e7%b0%a1%e6%98%93%e8%a7%a3%e6%9e%90&amp;url=http%3a%2f%2fonori.github.io%2fpost%2flaravel-keenio-heroku%2f"
+          onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <span class="hidden">Twitter</span>
+      </a>
+      <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fonori.github.io%2fpost%2flaravel-keenio-heroku%2f"
+          onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <span class="hidden">Facebook</span>
+      </a>
+      <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=http%3a%2f%2fonori.github.io%2fpost%2flaravel-keenio-heroku%2f"
+         onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <span class="hidden">Google+</span>
+      </a>
+    </section>
+    
+
+    
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'onori';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    
+
+  </footer>
+</article>
+
+</main>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">MAN.IN.BLOG</a> All rights reserved - 2015</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://onori.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="http://onori.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://onori.github.io/js/index.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
+

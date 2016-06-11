@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Laravel on MAN.IN.BLOG</title>
+    <link>http://onori.github.io/tags/laravel/</link>
+    <description>Recent content in Laravel on MAN.IN.BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>All rights reserved - 2015</copyright>
+    <lastBuildDate>Thu, 22 Oct 2015 16:00:18 +0900</lastBuildDate>
+    <atom:link href="http://onori.github.io/tags/laravel/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>laravel policyのハマりどころ</title>
+      <link>http://onori.github.io/post/laravel-policy/</link>
+      <pubDate>Thu, 22 Oct 2015 16:00:18 +0900</pubDate>
+      
+      <guid>http://onori.github.io/post/laravel-policy/</guid>
+      <description>
+
+&lt;h2 id=&#34;authorization&#34;&gt;authorization&lt;/h2&gt;
+
+&lt;p&gt;Laravel5.11からauthorization（認可）が追加されたよ！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://laravel.com/docs/5.1/authorization&#34;&gt;http://laravel.com/docs/5.1/authorization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://readouble.com/laravel/5/1/ja/authorization.html&#34;&gt;http://readouble.com/laravel/5/1/ja/authorization.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;使い方は簡単なので上で見てね！！！&lt;br /&gt;
+使い方の説明じゃないよ！！クソなハマりポイントの解説だよ！！！&lt;/p&gt;
+
+&lt;p&gt;これでLaravelでもデフォルトでACLが出来るよ！&lt;br /&gt;
+やったねタエちゃん！！&lt;/p&gt;
+
+&lt;h2 id=&#34;controllerとpolicyとのひも付け&#34;&gt;ControllerとPolicyとのひも付け&lt;/h2&gt;
+
+&lt;p&gt;AuthServiceProviderにモデルとポリシーファイルとを紐付けるよ！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;AuthServiceProvider.php
+&lt;code&gt;
+protected $policies = [
+&#39;App\Measure&#39; =&amp;gt; &#39;App\Policies\MeasurePolicy&#39;,
+]
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ポリシーファイルはartisanコマンドから生成できるよ！&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ php artisan make:policy MeasurePolicy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ポリシーファイルに制限規則を記述するよ！&lt;br /&gt;
+&lt;code&gt;true&lt;/code&gt; が返れば処理は正常に続行されるよ！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MeasurePolicy.php
+&lt;code&gt;
+public function show(User $user, Customer $customer)
+{
+return $user-&amp;gt;bureau_id === $customer-&amp;gt;measure-&amp;gt;bureau-&amp;gt;id;
+}
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;コントローラーとポリシーのメソッド名は自動で紐づくんだって！&lt;br /&gt;
+かしこいね！！&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;ポリシーのメソッドはコントローラーのメソッドと頻繁に対応します。たとえば前記のupdateメソッドのように、updateと言う名前がコントローラーメソッドとポリシーメソッドで共通です。そのため、Laravelはauthorizeメソッドの引数にインスタンスだけを渡すことも許しています。認可するアビリティは呼び出しているメソッドの名前を元に自動的に決められます。この例では、コントローラーのupdateメソッドからauthorizeが呼びだされていますから、PostPolicy上でもupdateメソッドが呼びだされます。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;MeasureController&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public function create($id)
+{
+    $customer = Customer::find(1);
+    $this-&amp;gt;authorize($customer);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;その結果&amp;hellip;&lt;br /&gt;
+↓  ↓  ↓  ↓&lt;/p&gt;
+
+&lt;p&gt;＿人人人人人人＿&lt;br /&gt;
+＞　突然の死　＜&lt;br /&gt;
+￣Y^Y^Y^Y^Y￣&lt;/p&gt;
+
+&lt;h3 id=&#34;なぜなのか&#34;&gt;なぜなのか？&lt;/h3&gt;
+
+&lt;p&gt;ポリシーファイルが暗黙的にコントローラメソッドと連携する場合、&lt;br /&gt;
+&lt;strong&gt;第二引数のインスタンスに紐づくポリシー&lt;/strong&gt; が適用されるよ！&lt;br /&gt;
+つまり上の例だと、&lt;code&gt;CustomerPolicy&lt;/code&gt; の&lt;code&gt;create&lt;/code&gt;メソッドが呼ばれてることになるよ！&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ほんと死ねばいいのにね！！！！！！！！！！&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;回避方法&#34;&gt;回避方法&lt;/h3&gt;
+
+&lt;p&gt;第二引数のインスタンスから取得するので、第二引数に（たとえPolicy内で使わないとしても）その &lt;strong&gt;コントローラーに紐付いてるモデルインスタンス&lt;/strong&gt; を投げるよ！！！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MeasureController.php
+&lt;code&gt;
+public function create($id)
+{
+$customer = Customer::find(1);
+$this-&amp;gt;authorize([new Exchange(), $customer]);
+}
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ポリシー側も変更するよ！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MeasurePolicy.php
+&lt;code&gt;
+public function show(User $user, Measure $measure, Customer $customer)
+{
+return $user-&amp;gt;bureau_id === $customer-&amp;gt;measure-&amp;gt;bureau-&amp;gt;id;
+}
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;(*^◯^*) これで動くんだ！&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;ちなみにコントローラー側から authorize関数の引数に2つ以上のインスタンスを渡す時は、&lt;strong&gt;配列&lt;/strong&gt; にして渡すんだ！わかりづらいんだ！！死ねばいいのに！！&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>laravel&#43;Keen.io&#43;herokuで簡易解析</title>
+      <link>http://onori.github.io/post/laravel-keenio-heroku/</link>
+      <pubDate>Tue, 18 Aug 2015 22:09:24 +0900</pubDate>
+      
+      <guid>http://onori.github.io/post/laravel-keenio-heroku/</guid>
+      <description>
+
+&lt;p&gt;とあるシステムで簡単なアクセス解析をする必要があったため、&lt;br /&gt;
+せっかくなので存在だけは知っていたKeen.ioを使ってみた。&lt;/p&gt;
+
+&lt;h2 id=&#34;keen-io&#34;&gt;Keen.io&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/keen_io_top.png&#34; alt=&#34;keen_io_top.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://keen.io/&#34;&gt;Keen.io&lt;/a&gt; は簡単にいうと解析サービス。&lt;br /&gt;
+Googleアナリティクスとかmixpanelとかに近いっちゃー近いけど、&lt;br /&gt;
+Keen.ioは基本的に &lt;strong&gt;自分で&lt;/strong&gt; 解析したい情報をJSONで投げる。&lt;/p&gt;
+
+&lt;p&gt;上述アクセスログに関しては、herokuのpostgreSQLなんかにぶっこんでるともったいない。
+そんな時はログ基盤としてKeen.ioを使いましょ、って話。&lt;br /&gt;
+とりあえずJSONでぶん投げておけば、「後で◯◯のデータを解析したい！」なんていう時にも役に立つ。&lt;br /&gt;
+グラフの出力もしてくれるし。&lt;/p&gt;
+
+&lt;p&gt;そんなわけでHeroku + LaravelでのKeen.ioの使い方。&lt;/p&gt;
+
+&lt;h2 id=&#34;heroku&#34;&gt;Heroku&lt;/h2&gt;
+
+&lt;p&gt;HerokuのアドオンからKeen.ioをインストール。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/keen_io_heroku.png&#34; alt=&#34;keen_io_heroku.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Developerプランは月50,000回のイベント送信まで無料。&lt;br /&gt;
+ホント助かりまっせ！送信回数が増えたらぜひ有料プランを！&lt;/p&gt;
+
+&lt;p&gt;コンソールからインストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ heroku addons:create keen:developer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Herokuの管理画面から、Setting &amp;gt; Config Variables &amp;gt; Edit&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/keen_heroku_env.png&#34; alt=&#34;keen_heroku_env.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;のような感じで環境設定値が入る。&lt;/p&gt;
+
+&lt;h2 id=&#34;laravel&#34;&gt;Laravel&lt;/h2&gt;
+
+&lt;h3 id=&#34;envファイルの編集&#34;&gt;.envファイルの編集&lt;/h3&gt;
+
+&lt;p&gt;上記の環境設定は、.envファイルに同じように記述する。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;.env&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;KEEN_API_URL=####
+KEEN_MASTER_KEY=####
+.
+.
+.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;composerパッケージに追加&#34;&gt;composerパッケージに追加&lt;/h3&gt;
+
+&lt;p&gt;ありがたいことにLaravelからKeen.ioを利用が可能なcomposerパッケージを作ってくれている人がいる。&lt;br /&gt;
+せっかくなので利用させていただきましょう。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/garethtdavies/keen-io-laravel&#34;&gt;https://github.com/garethtdavies/keen-io-laravel&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;$ composer require wensleydale/keen-io-laravel:1.*
+$ composer update
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;更新が終了したら、パッケージ追加完了。&lt;/p&gt;
+
+&lt;h3 id=&#34;サービスプロバイダーとエイリアスの追加&#34;&gt;サービスプロバイダーとエイリアスの追加&lt;/h3&gt;
+
+&lt;p&gt;config/app.php を開き、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&#39;providers&#39; =&amp;gt; array(
+    ...
+    Wensleydale\KeenLaravel\KeenLaravelServiceProvider::class
+)
+
+&#39;aliases&#39; =&amp;gt; array(
+    ...
+    &#39;Keen&#39;      =&amp;gt; Wensleydale\KeenLaravel\KeenFacade::class,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;を追加したのち&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ php artisan vendor:publish
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;を実行すると、同じくconfigディレクトリ内にkeen.phpというファイルがジェネレイトされる。&lt;/p&gt;
+
+&lt;h3 id=&#34;keen-php&#34;&gt;keen.php&lt;/h3&gt;
+
+&lt;p&gt;keen.phpには先ほど.envファイルに記述した設定値を記述。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;keen.php&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+
+return array(
+...
+    &#39;projectId&#39; =&amp;gt; env(&#39;KEEN_PROJECT_ID&#39;),
+
+...
+    &#39;masterKey&#39; =&amp;gt; env(&#39;KEEN_MASTER_KEY&#39;),
+    &#39;writeKey&#39; =&amp;gt; env(&#39;KEEN_WRITE_KEY&#39;),
+    &#39;readKey&#39; =&amp;gt; env(&#39;KEEN_READ_KEY&#39;),
+
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このようにenv関数から設定値を読み込む。&lt;/p&gt;
+
+&lt;h3 id=&#34;keen-ioに値を投げる&#34;&gt;Keen.ioに値を投げる&lt;/h3&gt;
+
+&lt;p&gt;さて、ここまで準備が出来たら、いよいよKeen.ioに値をぶん投げる時が来る。&lt;br /&gt;
+今回の要件はアクセス解析、というより「誰がいつログインしたか？」の情報だけで良かったので、ログイン部分にこのKeenの処理を挟む。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;app/Controller/AuthController.php&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+namespace App\Http\Controllers\Auth;
+
+use Auth;
+use Keen;
+use App\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\Redirect;
+
+class AuthController extends Controller
+{
+    public function postLogin (Request $request)
+    {
+        if (Auth::attempt([&#39;email&#39; =&amp;gt; $request-&amp;gt;email, &#39;password&#39; =&amp;gt; $request-&amp;gt;password])) {
+
+            // KEEN.IOにイベントを送信
+            $user = Auth::user();
+            $event = [&#39;login&#39; =&amp;gt; [&#39;name&#39; =&amp;gt; $user-&amp;gt;name]];
+            Keen::addEvent(&#39;login&#39;, $event);
+
+            return redirect()-&amp;gt;intended(&#39;dashboard&#39;);
+        } else {
+            return redirect()-&amp;gt;intended(&#39;/&#39;);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;$event = [&#39;login&#39; =&amp;gt; [&#39;name&#39; =&amp;gt; $user-&amp;gt;name]]&lt;/code&gt; 部分でKeen.ioへ送信するデータを作成し、
+&lt;code&gt;Keen::addEvent()&lt;/code&gt;で送信、これだけ。とても簡単。投げられた値は、herokuからSSOでKeen.ioにアクセスし、&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/Keenio_json.png&#34; alt=&#34;Keenio_json.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;で確認できる。Keenはデータを取得した際のtimestampもよしなにつけてくれるためありがたい。&lt;/p&gt;
+
+&lt;h3 id=&#34;keen-ioからデータを取得&#34;&gt;Keen.ioからデータを取得&lt;/h3&gt;
+
+&lt;p&gt;Keen.ioは様々な解析が可能だが、全部紹介していたらとっても長くなりそうなので割愛。&lt;br /&gt;
+詳しくは &lt;a href=&#34;https://keen.io/docs/&#34;&gt;https://keen.io/docs/&lt;/a&gt; を確認しながら、いろいろ弄ってみてください。&lt;/p&gt;
+
+&lt;p&gt;本アプリケーションでは1日間でのログイン集計が欲しかったので、こんな取得イベントを走らせてました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// ログイン履歴を取得
+$event = Keen::count(&#39;login&#39;,
+[&#39;target_property&#39; =&amp;gt; &#39;purchase.item&#39;,
+    &#39;group_by&#39; =&amp;gt; &#39;login.name&#39;,
+    &#39;interval&#39; =&amp;gt; &#39;daily&#39;,
+    &#39;timezone&#39; =&amp;gt; &#39;UTC&#39;,
+    &#39;timeframe&#39; =&amp;gt; &#39;this_1_days&#39;
+]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これを1日1回、heroku schedulerで走らせて、その日のログインを確認するフロー。&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回のようにちょっとしたことから、自分自身で心ゆくまで解析したいときまで、Keen.ioの汎用性はとても高い。&lt;br /&gt;
+反面、googleアナリティクスのように、 &lt;strong&gt;JS一行埋め込んで、はい終わり&lt;/strong&gt; という代物ではないため、
+利用できるのは開発者に限るのかも。&lt;/p&gt;
+
+&lt;p&gt;ただ、様々な要求が飛び交う中で、こういうことがパッとできるのはやっぱりHerokuの良いところだし、
+豊富なアドオンのおかげでもある、と感じる次第です。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>laravel5.1でschedule &#43; メール送信 &#43; Heroku</title>
+      <link>http://onori.github.io/post/laravel-schedule-mail-heroku/</link>
+      <pubDate>Tue, 28 Jul 2015 19:47:10 +0900</pubDate>
+      
+      <guid>http://onori.github.io/post/laravel-schedule-mail-heroku/</guid>
+      <description>
+
+&lt;h2 id=&#34;schedule&#34;&gt;Schedule&lt;/h2&gt;
+
+&lt;p&gt;Laravel5.1ではスケジューラによるcron処理が可能。&lt;br /&gt;
+利用方法は以下。&lt;/p&gt;
+
+&lt;h3 id=&#34;laravel側の設定&#34;&gt;Laravel側の設定&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Console/Kernel.php&lt;/code&gt; 内&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protected function schedule(Schedule $schedule)
+{
+    $schedule-&amp;gt;command(&#39;inspire&#39;)
+             -&amp;gt;hourly();
+
+    $schedule-&amp;gt;command(&#39;user:change-password 5365576&#39;)
+            -&amp;gt;everyFiveMinutes();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;こんな感じでコマンドを登録しておく。&lt;br /&gt;
+関数群は以下↓&lt;br /&gt;
+&lt;a href=&#34;http://readouble.com/laravel/5/1/ja/scheduling.html&#34;&gt;http://readouble.com/laravel/5/1/ja/scheduling.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;crontabの設定&#34;&gt;crontabの設定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ crontab -e
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下のコマンドをファイルに記述&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;* * * * * php /path/to/artisan schedule:run 1&amp;gt;&amp;gt; /dev/null 2&amp;gt;&amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要は「毎秒cron走らせて、phpの関数で実行時間を管理」するということらしい。&lt;/p&gt;
+
+&lt;h2 id=&#34;メール&#34;&gt;メール&lt;/h2&gt;
+
+&lt;p&gt;Laravel内部では、&lt;a href=&#34;https://github.com/swiftmailer/swiftmailer&#34;&gt;SwiftMailer&lt;/a&gt; というPHPライブラリを利用している。&lt;br /&gt;
+デフォルトでサポートされているドライバーは、&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;smtp&lt;/li&gt;
+&lt;li&gt;mail&lt;/li&gt;
+&lt;li&gt;sendmail&lt;/li&gt;
+&lt;li&gt;mailgun&lt;/li&gt;
+&lt;li&gt;mandrill&lt;/li&gt;
+&lt;li&gt;ses(amazon simple email service)&lt;/li&gt;
+&lt;li&gt;log&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;というラインナップ。「log」は &lt;strong&gt;開発環境で送信結果のみをログ・ファイルに出力&lt;/strong&gt; など開発環境向き。&lt;br /&gt;
+とりわけメールのテストは面倒くさいのでこういった気遣いはありがたい。
+が、せっかくなので、テストはLaravel推奨の&lt;a href=&#34;https://mailtrap.io/&#34;&gt;mailtrap.io&lt;/a&gt; を利用する。&lt;br /&gt;
+productionではherokuを利用することを想定し、無料枠のあるmailgun（400/day）を使う。&lt;/p&gt;
+
+&lt;h3 id=&#34;開発環境&#34;&gt;開発環境&lt;/h3&gt;
+
+&lt;p&gt;とりま &lt;code&gt;guzzle&lt;/code&gt;をcomposerに。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;require&amp;quot;: {
+    &amp;quot;guzzlehttp/guzzle&amp;quot;: &amp;quot;~5.3|~6.0&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;で、&lt;code&gt;$ composer update&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://mailtrap.io/&#34;&gt;https://mailtrap.io/&lt;/a&gt; →「Sing up」から、アカウントを作成。&lt;br /&gt;
+OAuthでサクッとやっちまうのがラク。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/InboxesMailtrap.png&#34; alt=&#34;InboxesMailtrap.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ログインページに遷移したら、「Demo inbox」をクリック&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/Demo_inboxMailtrap.png&#34; alt=&#34;Demo_inboxMailtrap.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;モザイクかかってるUsernameとPasswordを&lt;code&gt;.env&lt;/code&gt; にいれればおｋ．&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-env&#34;&gt;MAIL_DRIVER=smtp
+MAIL_HOST=mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=[mailtrap_smtp_username]
+MAIL_PASSWORD=[mailtrap_smtp_password]
+MAIL_ENCRYPTION=null
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上記を設定した状態で、&lt;a href=&#34;http://readouble.com/laravel/5/1/ja/mail.html&#34;&gt;http://readouble.com/laravel/5/1/ja/mail.html&lt;/a&gt; の「メール送信」項目を参考にコードを書けばまあ動くだろう。&lt;/p&gt;
+
+&lt;h3 id=&#34;mailgunの設定&#34;&gt;mailgunの設定&lt;/h3&gt;
+
+&lt;p&gt;さてお次はmailgunの設定。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ heroku addons:create mailgun:starter -a APP_NAME
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;でmailgunの無料プランを追加。&lt;/p&gt;
+
+&lt;p&gt;次に、&lt;code&gt;config/services.php&lt;/code&gt; 以下のmailgunにdomainとsecretを記入。&lt;br /&gt;
+若干わかりづらかったが、&lt;/p&gt;
+
+&lt;p&gt;・ドメイン
+&lt;img src=&#34;http://onori.github.io/images/Domains_Mailgun.png&#34; alt=&#34;Domains_Mailgun.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;・secret
+&lt;img src=&#34;http://onori.github.io/images/mailgun_apikey.png&#34; alt=&#34;mailgun_apikey.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;である。（モザイクだらけ）&lt;/p&gt;
+
+&lt;p&gt;あとは、&lt;code&gt;mail.php&lt;/code&gt; をちょちょいと修正（ユーザー名とかパスワードとか）を入れればおｋ.&lt;br /&gt;
+herokuの環境変数にセットアップされているので、productionからはそっちから呼ばせても良い。&lt;/p&gt;
+
+&lt;h2 id=&#34;herokuでの運用&#34;&gt;herokuでの運用&lt;/h2&gt;
+
+&lt;p&gt;さて、schedule + メールという処理が開発環境で動くところまでは説明したが、&lt;br /&gt;
+ここまでやっといて何だけど、herokuからはLaravelのscheduleは &lt;strong&gt;使えない。&lt;/strong&gt;&lt;br /&gt;
+cronの設定が出来ないから。&lt;br /&gt;
+ただし、そんなときのために &lt;strong&gt;heroku scheduler&lt;/strong&gt; がある。&lt;/p&gt;
+
+&lt;h2 id=&#34;heroku-schedulerのインストール&#34;&gt;heroku schedulerのインストール&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ heroku addons:create scheduler:standard -a APP_NAME
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;でheroku schedulerをインストール。&lt;/p&gt;
+
+&lt;h2 id=&#34;schedulerの設定&#34;&gt;schedulerの設定&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/Heroku_Scheduler.png&#34; alt=&#34;Heroku_Scheduler.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$&lt;/code&gt; マーク以後に、実行させたいコマンドを入力し、 FREQUENCYから実行タイミングを指定すれば良い。最短は &lt;strong&gt;10分&lt;/strong&gt; である。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

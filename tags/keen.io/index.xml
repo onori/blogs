@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Keen.Io on MAN.IN.BLOG</title>
+    <link>http://onori.github.io/tags/keen/index.io/</link>
+    <description>Recent content in Keen.Io on MAN.IN.BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>All rights reserved - 2015</copyright>
+    <lastBuildDate>Tue, 18 Aug 2015 22:09:24 +0900</lastBuildDate>
+    <atom:link href="http://onori.github.io/tags/keen.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>laravel&#43;Keen.io&#43;herokuで簡易解析</title>
+      <link>http://onori.github.io/post/laravel-keenio-heroku/</link>
+      <pubDate>Tue, 18 Aug 2015 22:09:24 +0900</pubDate>
+      
+      <guid>http://onori.github.io/post/laravel-keenio-heroku/</guid>
+      <description>
+
+&lt;p&gt;とあるシステムで簡単なアクセス解析をする必要があったため、&lt;br /&gt;
+せっかくなので存在だけは知っていたKeen.ioを使ってみた。&lt;/p&gt;
+
+&lt;h2 id=&#34;keen-io&#34;&gt;Keen.io&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/keen_io_top.png&#34; alt=&#34;keen_io_top.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://keen.io/&#34;&gt;Keen.io&lt;/a&gt; は簡単にいうと解析サービス。&lt;br /&gt;
+Googleアナリティクスとかmixpanelとかに近いっちゃー近いけど、&lt;br /&gt;
+Keen.ioは基本的に &lt;strong&gt;自分で&lt;/strong&gt; 解析したい情報をJSONで投げる。&lt;/p&gt;
+
+&lt;p&gt;上述アクセスログに関しては、herokuのpostgreSQLなんかにぶっこんでるともったいない。
+そんな時はログ基盤としてKeen.ioを使いましょ、って話。&lt;br /&gt;
+とりあえずJSONでぶん投げておけば、「後で◯◯のデータを解析したい！」なんていう時にも役に立つ。&lt;br /&gt;
+グラフの出力もしてくれるし。&lt;/p&gt;
+
+&lt;p&gt;そんなわけでHeroku + LaravelでのKeen.ioの使い方。&lt;/p&gt;
+
+&lt;h2 id=&#34;heroku&#34;&gt;Heroku&lt;/h2&gt;
+
+&lt;p&gt;HerokuのアドオンからKeen.ioをインストール。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/keen_io_heroku.png&#34; alt=&#34;keen_io_heroku.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Developerプランは月50,000回のイベント送信まで無料。&lt;br /&gt;
+ホント助かりまっせ！送信回数が増えたらぜひ有料プランを！&lt;/p&gt;
+
+&lt;p&gt;コンソールからインストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ heroku addons:create keen:developer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Herokuの管理画面から、Setting &amp;gt; Config Variables &amp;gt; Edit&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/keen_heroku_env.png&#34; alt=&#34;keen_heroku_env.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;のような感じで環境設定値が入る。&lt;/p&gt;
+
+&lt;h2 id=&#34;laravel&#34;&gt;Laravel&lt;/h2&gt;
+
+&lt;h3 id=&#34;envファイルの編集&#34;&gt;.envファイルの編集&lt;/h3&gt;
+
+&lt;p&gt;上記の環境設定は、.envファイルに同じように記述する。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;.env&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;KEEN_API_URL=####
+KEEN_MASTER_KEY=####
+.
+.
+.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;composerパッケージに追加&#34;&gt;composerパッケージに追加&lt;/h3&gt;
+
+&lt;p&gt;ありがたいことにLaravelからKeen.ioを利用が可能なcomposerパッケージを作ってくれている人がいる。&lt;br /&gt;
+せっかくなので利用させていただきましょう。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/garethtdavies/keen-io-laravel&#34;&gt;https://github.com/garethtdavies/keen-io-laravel&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;$ composer require wensleydale/keen-io-laravel:1.*
+$ composer update
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;更新が終了したら、パッケージ追加完了。&lt;/p&gt;
+
+&lt;h3 id=&#34;サービスプロバイダーとエイリアスの追加&#34;&gt;サービスプロバイダーとエイリアスの追加&lt;/h3&gt;
+
+&lt;p&gt;config/app.php を開き、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&#39;providers&#39; =&amp;gt; array(
+    ...
+    Wensleydale\KeenLaravel\KeenLaravelServiceProvider::class
+)
+
+&#39;aliases&#39; =&amp;gt; array(
+    ...
+    &#39;Keen&#39;      =&amp;gt; Wensleydale\KeenLaravel\KeenFacade::class,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;を追加したのち&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ php artisan vendor:publish
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;を実行すると、同じくconfigディレクトリ内にkeen.phpというファイルがジェネレイトされる。&lt;/p&gt;
+
+&lt;h3 id=&#34;keen-php&#34;&gt;keen.php&lt;/h3&gt;
+
+&lt;p&gt;keen.phpには先ほど.envファイルに記述した設定値を記述。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;keen.php&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+
+return array(
+...
+    &#39;projectId&#39; =&amp;gt; env(&#39;KEEN_PROJECT_ID&#39;),
+
+...
+    &#39;masterKey&#39; =&amp;gt; env(&#39;KEEN_MASTER_KEY&#39;),
+    &#39;writeKey&#39; =&amp;gt; env(&#39;KEEN_WRITE_KEY&#39;),
+    &#39;readKey&#39; =&amp;gt; env(&#39;KEEN_READ_KEY&#39;),
+
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このようにenv関数から設定値を読み込む。&lt;/p&gt;
+
+&lt;h3 id=&#34;keen-ioに値を投げる&#34;&gt;Keen.ioに値を投げる&lt;/h3&gt;
+
+&lt;p&gt;さて、ここまで準備が出来たら、いよいよKeen.ioに値をぶん投げる時が来る。&lt;br /&gt;
+今回の要件はアクセス解析、というより「誰がいつログインしたか？」の情報だけで良かったので、ログイン部分にこのKeenの処理を挟む。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;app/Controller/AuthController.php&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+namespace App\Http\Controllers\Auth;
+
+use Auth;
+use Keen;
+use App\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\Redirect;
+
+class AuthController extends Controller
+{
+    public function postLogin (Request $request)
+    {
+        if (Auth::attempt([&#39;email&#39; =&amp;gt; $request-&amp;gt;email, &#39;password&#39; =&amp;gt; $request-&amp;gt;password])) {
+
+            // KEEN.IOにイベントを送信
+            $user = Auth::user();
+            $event = [&#39;login&#39; =&amp;gt; [&#39;name&#39; =&amp;gt; $user-&amp;gt;name]];
+            Keen::addEvent(&#39;login&#39;, $event);
+
+            return redirect()-&amp;gt;intended(&#39;dashboard&#39;);
+        } else {
+            return redirect()-&amp;gt;intended(&#39;/&#39;);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;$event = [&#39;login&#39; =&amp;gt; [&#39;name&#39; =&amp;gt; $user-&amp;gt;name]]&lt;/code&gt; 部分でKeen.ioへ送信するデータを作成し、
+&lt;code&gt;Keen::addEvent()&lt;/code&gt;で送信、これだけ。とても簡単。投げられた値は、herokuからSSOでKeen.ioにアクセスし、&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://onori.github.io/images/Keenio_json.png&#34; alt=&#34;Keenio_json.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;で確認できる。Keenはデータを取得した際のtimestampもよしなにつけてくれるためありがたい。&lt;/p&gt;
+
+&lt;h3 id=&#34;keen-ioからデータを取得&#34;&gt;Keen.ioからデータを取得&lt;/h3&gt;
+
+&lt;p&gt;Keen.ioは様々な解析が可能だが、全部紹介していたらとっても長くなりそうなので割愛。&lt;br /&gt;
+詳しくは &lt;a href=&#34;https://keen.io/docs/&#34;&gt;https://keen.io/docs/&lt;/a&gt; を確認しながら、いろいろ弄ってみてください。&lt;/p&gt;
+
+&lt;p&gt;本アプリケーションでは1日間でのログイン集計が欲しかったので、こんな取得イベントを走らせてました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// ログイン履歴を取得
+$event = Keen::count(&#39;login&#39;,
+[&#39;target_property&#39; =&amp;gt; &#39;purchase.item&#39;,
+    &#39;group_by&#39; =&amp;gt; &#39;login.name&#39;,
+    &#39;interval&#39; =&amp;gt; &#39;daily&#39;,
+    &#39;timezone&#39; =&amp;gt; &#39;UTC&#39;,
+    &#39;timeframe&#39; =&amp;gt; &#39;this_1_days&#39;
+]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これを1日1回、heroku schedulerで走らせて、その日のログインを確認するフロー。&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;今回のようにちょっとしたことから、自分自身で心ゆくまで解析したいときまで、Keen.ioの汎用性はとても高い。&lt;br /&gt;
+反面、googleアナリティクスのように、 &lt;strong&gt;JS一行埋め込んで、はい終わり&lt;/strong&gt; という代物ではないため、
+利用できるのは開発者に限るのかも。&lt;/p&gt;
+
+&lt;p&gt;ただ、様々な要求が飛び交う中で、こういうことがパッとできるのはやっぱりHerokuの良いところだし、
+豊富なアドオンのおかげでもある、と感じる次第です。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

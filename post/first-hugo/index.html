@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  	<meta property="og:title" content=" ブログをhugoに移行してみた &middot;  MAN.IN.BLOG" />
+  	<meta property="og:site_name" content="MAN.IN.BLOG" />
+  	<meta property="og:url" content="http://onori.github.io/post/first-hugo/" />
+
+    
+  	<meta property="og:type" content="article" />
+
+    <meta property="og:article:published_time" content="2015-07-20T20:05:40&#43;09:00" />
+
+    
+    <meta property="og:article:tag" content="hugo" />
+    
+    
+
+  <title>
+     ブログをhugoに移行してみた &middot;  MAN.IN.BLOG
+  </title>
+
+    <meta name="description" content="マネージャー業務の日々 コード書くことが少なくなってる。最近はLaravelとElixir（言語のほう）に興味津々。" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://onori.github.io/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="http://onori.github.io/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="http://onori.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="http://onori.github.io/css/nav.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400|Inconsolata" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css" />
+
+    
+      
+          <link href="http://onori.github.io/index.xml" rel="alternate" type="application/rss+xml" title="MAN.IN.BLOG" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.16" />
+
+    <link rel="canonical" href="http://onori.github.io/post/first-hugo/" />
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-71080121-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+    </ul>
+    
+    
+    <a class="subscribe-button icon-feed" href="http://onori.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+
+<header class="main-header post-head no-cover">
+  <nav class="main-nav clearfix">
+
+
+  
+      <a class="blog-logo" href="http://onori.github.io/"><img src="http://onori.github.io/images/logo.png" alt="Home" /></a>
+  
+  
+      <a class="menu-button icon-feed" href="http://onori.github.io/index.xml">&nbsp;&nbsp;Subscribe</a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">ブログをhugoに移行してみた</h1>
+        <small></small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2015-07-20T20:05:40&#43;09:00">
+            Jul 20, 2015
+          </time>
+        
+         
+          <span class="post-tag small"><a href="http://onori.github.io/tags/hugo/">#hugo</a></span>
+         
+        </section>
+    </header>
+  
+    <section class="post-content">
+      
+
+<p>記事の移行は終わってないけど、ブログをhugoへ移行してみた。<br />
+hugoのインストールは<a href="http://qiita.com/syui/items/869538099551f24acbbf">ココ</a>の記事なんかを見ながらやるとサクサクと入る。</p>
+
+<p>スタティックサイトジェネレーターは過去に使ってたけどhugoはGoで出来てるし、速くていい感じ。</p>
+
+<h2 id="使用しているテーマ">使用しているテーマ</h2>
+
+<ul>
+<li><a href="https://github.com/vjeantet/hugo-theme-casper">https://github.com/vjeantet/hugo-theme-casper</a></li>
+</ul>
+
+<p>主にfont-familyなどをちょいちょい編集して利用中。
+もうちょっとテーマが増えればいろいろ使い道がありそう。</p>
+
+<h2 id="テーマのcssファイル変更">テーマのCSSファイル変更</h2>
+
+<p>既存のthemeディレクトリにある<code>static/css</code>をルートディレクトリにあるstatic/cssにコピーして利用するのが正っぽい。</p>
+
+<h2 id="github-pagesにデプロイ">github pagesにデプロイ</h2>
+
+<p><a href="http://hori-ryota.com/blog/create-blog-with-hugo-and-circleci/">http://hori-ryota.com/blog/create-blog-with-hugo-and-circleci/</a></p>
+
+<p>hori blogさんの記事を参考に設定。
+circle CIやwerckerでもデプロイ試してみた。<br />
+初めて使ったけど便利だ！<br />
+社内ではjenkins使ってるけど職人化がすすむ。</p>
+
+<p>CIツールというよりgithub pagesの仕組みがイマイチ理解しておらずそこに若干苦労。<br />
+まあ終わってしまえばなんてことはない。</p>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+    <figure class="author-image">
+        <a class="img" href="http://onori.github.io/" style="background-image: url(http://onori.github.io/images/logo.png)"><span class="hidden">onori's Picture</span></a>
+    </figure>
+    
+
+    
+
+
+
+
+
+<section class="author">
+  <h4><a href="http://onori.github.io/">onori</a></h4>
+  
+  <p>Profile</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Tokyo, Japan</span>
+    
+  </div>
+</section>
+
+
+
+    
+    <section class="share">
+      <h4>Share this post</h4>
+      <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=%e3%83%96%e3%83%ad%e3%82%b0%e3%82%92hugo%e3%81%ab%e7%a7%bb%e8%a1%8c%e3%81%97%e3%81%a6%e3%81%bf%e3%81%9f&amp;url=http%3a%2f%2fonori.github.io%2fpost%2ffirst-hugo%2f"
+          onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <span class="hidden">Twitter</span>
+      </a>
+      <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fonori.github.io%2fpost%2ffirst-hugo%2f"
+          onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <span class="hidden">Facebook</span>
+      </a>
+      <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=http%3a%2f%2fonori.github.io%2fpost%2ffirst-hugo%2f"
+         onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <span class="hidden">Google+</span>
+      </a>
+    </section>
+    
+
+    
+
+  </footer>
+</article>
+
+</main>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">MAN.IN.BLOG</a> All rights reserved - 2015</section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="http://onori.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="http://onori.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://onori.github.io/js/index.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
+
